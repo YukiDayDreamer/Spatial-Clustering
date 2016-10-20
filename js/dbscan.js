@@ -1,31 +1,19 @@
-//// test data with latitude and longitude
-//var X = [
-//    [10.0001, 10.0001], [10.0002, 10.0002], [10.0003, 10.0003], [10.0004, 10.0004],
-//    [20.0001, 20.0001], [20.0002, 20.0002], [20.0003, 20.0003], [20.0004, 20.0004],
-//    [30.0001, 30.0001], [30.0002, 30.0002], [30.0003, 30.0003], [30.0004, 30.0004],
-//    [40.0001, 40.0001], [40.0002, 40.0002], [40.0003, 40.0003], [40.0004, 40.0004],
-//    [70, 70], 
-//    [80, 80]
-//];
-//var eps = 100;
-//var MinPts = 4;
+// test data
+var X = [
+    [11, 11], [12, 12], [13, 13], [14, 14],
+    [21, 21], [22, 22], [23, 23], [24, 24],
+    [31, 31], [32, 32], [33, 33], [34, 34],
+    [41, 41], [42, 42], [43, 43], [44, 44],
+    [70, 70],
+    [80, 80]
+];
+var eps = 10;
+var MinPts = 4;
+var result = dbscan(X, eps, MinPts);
 
 // spatial distance
 function sp_dist(a, b) {
-    var lat1 = a[0], lng1 = a[1], lat2 = b[0], lng2 = b[1];
-    var toRadius = 0.017453292519943295;
-    var R = 6371000; // radius in meter
-    var dLat = (lat2 - lat1) * toRadius;
-    var dLng = (lng2 - lng1) * toRadius;
-    lat1 = lat1 * toRadius;
-    lat2 = lat2 * toRadius;
-
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c;
-
-    return d;
+    return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
 }
 
 // retrieve list of neighbors
@@ -33,7 +21,6 @@ function retrieve_neighbors(eps, point, cluster) {
     var neighbors = [];     // list of neighbor
     for (var iter = 0; iter < cluster.length; iter++) {
         var dist = sp_dist(point, cluster[iter]);
-//        var dist2 = tp_dist(point, cluster[iter]);
         if (dist <= eps) {
             neighbors.push(iter);
         }
@@ -42,7 +29,7 @@ function retrieve_neighbors(eps, point, cluster) {
 }
 
 // main function
-var dbscan = function(X, eps, MinPts) {
+function dbscan(X, eps, MinPts) {
     var cluster_label = 0; // label meaning: 0:unmarked; 1,2,3,...:cluster label; "noise":noise
     var labels = new Array(X.length).fill(0); // new an 0 array to store labels
     var clusters = []; // final output
