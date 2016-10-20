@@ -7,7 +7,7 @@ var STDBSCAN = function (X, eps1, eps2, MinPts) {
 
     // spatial distance
     this.sp_dist = function (a, b) {
-        return Math.sqrt(Math.pow((a[0] - b[0]), 2) + Math.pow((a[1] - b[1]), 2));
+        return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
     };
     // temporal distance
     this.tp_dist = function (a, b) {
@@ -91,6 +91,11 @@ var STDBSCAN = function (X, eps1, eps2, MinPts) {
 
 
 // test data
+/* para1 : spatial coordinate x
+ * para2 : spatial coordinate y
+ * para3 : time stamp t
+ */
+        
 var X = [
     [10.0001, 10.0001, 1], [10.0002, 10.0002, 2], [10.0003, 10.0003, 3], [10.0004, 10.0004, 4],
     [20.0001, 20.0001, 1], [20.0002, 20.0002, 2], [20.0003, 20.0003, 3], [20.0004, 20.0004, 4],
@@ -104,3 +109,4 @@ var eps2 = 5;
 var MinPts = 4;
 
 var st_dbscan = new STDBSCAN(X, eps1, eps2, MinPts);
+var result = st_dbscan.run();
